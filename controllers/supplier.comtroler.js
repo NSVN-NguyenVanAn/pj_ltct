@@ -28,15 +28,7 @@ class supplierController {
       .findAll()
       .then((result) => {
         const filters = req.query;
-        const filteredSuppliers = result.filter((supplier) => {
-          let isValid = true;
-          for (let key in filters) {
-            isValid = isValid && supplier[key] == filters[key];
-          }
-          return isValid;
-        });
-
-        const data = filteredSuppliers.findAndCountAll({
+        const data = supplier.findAndCountAll({
           where: {},
           order: [],
           limit,
@@ -51,13 +43,12 @@ class supplierController {
 
   async createHistory(req, res) {
     try {
-      // const list = newHistoryList.importHistory;
       const data = req.body;
       // TODO: VALIDATE DATA
       const newRecord = await supplier.create(data);
       return Response.success(res, newRecord.toJSON());
     } catch (e) {
-      Response.error(res, e);
+      return Response.error(res, e);
     }
   }
 
@@ -65,14 +56,9 @@ class supplierController {
     await supplier
       .findByPk(req.params.id)
       .then((result) => {
-        // return res.status(200).json({
-        //   data: { result },
-        //   message: "Sucessfully",
-        // });
-        return Response.success(result);
+        return Response.success(res, result);
       })
       .catch((err) => {
-        // console.log(err);
         return Response.error(res, err);
       });
   }
@@ -92,17 +78,14 @@ class supplierController {
     try {
       await supplier.destroy({
         where: {
-          id: req.params.id,
+          product_id: req.params.id,
         },
       });
-
-      return Response.success(res);
     } catch (error) {
-      // return res.json({
-      //   Error: "Something went wrong! Check this message: " + error,
-      // });
       return Response.error(res, error);
     }
+
+    return Response.success(res);
   }
 }
 

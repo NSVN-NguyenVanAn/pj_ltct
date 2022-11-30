@@ -6,40 +6,37 @@ const QueryParser = require('../utils/query');
 
 class importHistoryController {
   async getAllProduct(req, res) {
-    try {
-      const { limit, offset, page } = QueryParser.paginate(req);
-      // NOTE: paginate
-      // TODO: filter by attr
-      await importHistory.findAll().then(async (result) => {
-        const filters = req.query;
-        console.log('day la :', filters);
-        try {
-          const data = await importHistory.findAndCountAll({
-            where: {},
-            order: [],
-            limit,
-            offset,
-          });
+    const { limit, offset, page } = QueryParser.paginate(req);
+    // NOTE: paginate
+    // TODO: filter by attr
+    await importHistory.findAll().then(async (result) => {
+      const filters = req.query;
+      console.log('day la :', filters);
+      try {
+        const data = await importHistory.findAndCountAll({
+          where: {},
+          order: [],
+          limit,
+          offset,
+        });
 
-          return Response.paginate(res, page, limit, data?.count, data?.rows);
-        } catch (e) {
-          return Response.error(res, err);
-        }
-      });
-    } catch (err) {
-      return Response.error(res, err);
-    }
+        return Response.paginate(res, page, limit, data?.count, data?.rows);
+      } catch (e) {
+        return Response.error(res, err);
+      }
+    });
   }
 
   async createHistory(req, res) {
+    // const list = newHistoryList.importHistory;
     try {
-      // const list = newHistoryList.importHistory;
       const data = req.body;
+      console.log('day la :', data);
       // TODO: VALIDATE DATA
       const newRecord = await importHistory.create(data);
       return Response.success(res, newRecord.toJSON());
     } catch (e) {
-      Response.error(res, e);
+      return Response.error(res, e);
     }
   }
 
