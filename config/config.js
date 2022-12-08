@@ -1,24 +1,15 @@
 require("dotenv").config(); // this is important!
+
+const defaultDbConfig = {
+  username: process.env.USER,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE,
+  host: process.env.DB_PORT,
+  dialect: process.env.DIALECT || "mysql",
+};
+
 module.exports = {
-  development: {
-    username: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
-    host: process.env.DB_PORT,
-    dialect: process.env.DIALECT || "mysql",
-  },
-  test: {
-    username: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
-    host: process.env.DB_PORT,
-    dialect: process.env.DIALECT || "mysql",
-  },
-  production: {
-    username: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
-    host: process.env.DB_PORT,
-    dialect: process.env.DIALECT || "mysql",
-  },
+  development: defaultDbConfig,
+  test: defaultDbConfig,
+  production: defaultDbConfig,
 };

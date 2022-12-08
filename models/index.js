@@ -12,21 +12,20 @@ const db = {};
 
 let sequelize = new Sequelize(
   process.env.DATABASE,
-  process.env.USER,
-  process.env.PASSWORD,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
   {
-    host: process.env.HOST || "localhost",
+    host: process.env.DB_HOST || "localhost",
     port: process.env.DB_PORT,
     dialect: process.env.DIALECT || "mysql",
     dialectModule: process.env.DIALECT == "postgres" ? pg : undefined,
   }
 );
-// if (config.use_env_variable) {
-//   sequelize = new Sequelize(process.env[config.use_env_variable], config);
-// } else {
-//   sequelize = new Sequelize(config.database, config.username, config.password, config);
-// }
 
+/*
+ * Load file js trong thu muc model, mỗi file đại diện cho 1 bảng trong db
+ *  ( trừ file index )
+ */
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (
@@ -52,12 +51,15 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 db.sequelize
-  .sync({ force: process.env.NODE_ENV == "development" })
+  .sync({
+    force: false,
+    // process.env.NODE_ENV == "development"
+  })
   .then((result) => {
     console.log("DB Connect successfully");
   })
   .catch((err) => {
-    console.log(err);
+    console.error(err);
   });
 
 module.exports = db;
